@@ -56,7 +56,27 @@ set(CPACK_DEBIAN_PACKAGE_GENERATE_SHLIBS ON)
 # Handle ldconfig
 set(TRIGGERS_FILE ${CMAKE_CURRENT_BINARY_DIR}/triggers)
 file(WRITE ${TRIGGERS_FILE} "activate-noawait ldconfig\n")
-set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA ${TRIGGERS_FILE})
+
+# Remove the conf files that CPackDeb installs by default
+file(WRITE ${CMAKE_BINARY_DIR}/postinst "#!/bin/bash
+
+set -e
+
+if [ \"$1\" = \"configure\" ]; then
+    echo
+fi
+")
+file(WRITE ${CMAKE_BINARY_DIR}/postrm "#!/bin/bash
+
+set -e
+
+if [ \"$1\" = \"configure\" ]; then
+    echo
+fi
+")
+
+# Extra files are triggers, postinst, and postrm
+set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA ${TRIGGERS_FILE} ${CMAKE_BINARY_DIR}/postinst ${CMAKE_BINARY_DIR}/postrm)
 
 include(GNUInstallDirs)
 
