@@ -48,6 +48,16 @@ file(WRITE ${CMAKE_BINARY_DIR}/description.txt
 ")
 set(CPACK_PACKAGE_DESCRIPTION_FILE ${CMAKE_BINARY_DIR}/description.txt)
 
+# Changelog file - required by lintian
+file(WRITE ${CMAKE_BINARY_DIR}/changelog 
+"srcComplexity (1.0.0-1) UNRELEASED; urgency=medium
+  * Initial release
+ -- Michael L. Collard <collard@uakron.edu>  Mon, 2 Nov 2020 17:00:00 +0400
+"
+)
+execute_process(COMMAND gzip -n -9 -f ${CMAKD_BINARY_DIR}/changelog)
+install(FILES ${CMAKE_BINARY_DIR}/changelog.gz DESTINATION share/doc/srccomplexity)
+
 # Dependencies
 set(CPACK_DEBIAN_PACKAGE_DEBUG OFF)
 set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
